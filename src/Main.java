@@ -1,3 +1,6 @@
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 public class Main {
 
 
@@ -12,16 +15,43 @@ public class Main {
                 new Frage("Wie groß ist ein int?", new String[] {"32 byte", "8 bit", "32 bit", "Größer als der Mond"}, 2, 0.7)
         };
 
-        for(Frage f : fragenkatalog) {
-            for (int i=0; i < f.antwortmoeglichkeit.length; i++)
-            {
+        bubbleSort(fragenkatalog);
 
+        for(Frage f : fragenkatalog) {
+            String timeStamp = "nie";
+            if(f.letzterAufruf > 0)
+            {
+                Timestamp myTime =  new Timestamp(f.letzterAufruf);
+                timeStamp = new SimpleDateFormat("HH 'Uhr' mm 'Minuten und' ss 'Sekunden'").format(myTime);
             }
 
-
-            System.out.println(f.frage + f.antwortmoeglichkeit[1]);
+            String frage =("Frage: " + f.frage + "\n" +
+                    "Antwortmöglichkeit: [" + f.antwortmoeglichkeit[0] + "," + f.antwortmoeglichkeit[1] + "," + f.antwortmoeglichkeit[2] + "," + f.antwortmoeglichkeit[3] + "]" + "\n" +
+                    "Lösung: " + f.antwortmoeglichkeit[f.loesung] + "\n" +
+                    "Relevanz: " + f.relevanz + "\n" +
+                    "Letzter Aufruf: " + timeStamp + "\n");
+            //System.out.println(frage);
+            f.stellen();
         }
 
+    }
+
+    /**
+     * Zum Sortieren (absteigend nach Relevanz)
+     */
+    public static void bubbleSort(Frage[] fragenkatalog) {
+        boolean unsorted = true;
+        while (unsorted) {
+            unsorted = false;
+            for (int i = 0; i < fragenkatalog.length-1; i++) {
+                if (!(fragenkatalog[i].relevanz >= fragenkatalog[i+1].relevanz)) {
+                    Frage elementCopy = fragenkatalog[i];
+                    fragenkatalog[i] = fragenkatalog[i+1];
+                    fragenkatalog[i+1] = elementCopy;
+                    unsorted = true;
+                }
+            }
+        }
     }
 }
 
